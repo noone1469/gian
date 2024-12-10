@@ -20,51 +20,51 @@
     import numpy as np<br>
     import matplotlib.pyplot as plt<br>
     import seaborn as sns<br>
-
+    
     # 1. Visualize data using Matplotlib or Seaborn<br>
     # Load the Iris dataset<br>
     iris = load_iris(as_frame=True)<br>
     df = iris.frame<br>
-
+    
     # Pairplot visualization<br>
     sns.pairplot(df, hue='target')<br>
     plt.suptitle("Pairplot of Iris Dataset", y=1.02)  # Title for Pairplot<br>
-    plt.show() <br>
-
+    plt.show()<br>
+    
     # Histogram for a specific feature<br>
     sns.histplot(df['sepal length (cm)'], kde=True)<br>
     plt.title("Distribution of Sepal Length")<br>
     plt.xlabel("Sepal Length (cm)")<br>
     plt.ylabel("Frequency")<br>
-    plt.show() <br>
-
+    plt.show()<br>
+    
     # 2. Extract data from websites using the Scrapy framework (Example code for Scrapy usage, not executed here)<br>
-
-    """<br>
+    """
     # Create a Scrapy project with the following command:<br>
     # scrapy startproject example_project<br>
+    
     # Create a spider to extract data:<br>
     # scrapy genspider example_spider example.com<br>
+    
     # Implement the spider in the example_spider.py file:<br>
     import scrapy<br>
     """<br>
-
     #Code of scrapy<br>
-
-    """<br>
+    
+    """
     #Code on Command Prompt<br>
     scrapy startproject my_scraper<br>
     cd my_scraper<br>
-    #output <br>
-    #A Scraper files are created <br>
-
+    #output<br>
+    #A Scraper files are created<br>
+     
     import scrapy<br>
-
     class AmazonSpider(scrapy.Spider):<br>
         name = "amazon"<br>
         start_urls = ['https://www.amazon.in/s?k=moto']<br>
-
+    
         def parse(self, response):<br>
+            # Extract data using correct CSS selectors<br>
             for item in response.css('div.s-main-slot div.s-result-item'):<br>
                 yield {<br>
                     'title': item.css('span.a-size-medium.a-color-base.a-text-normal::text').get(),<br>
@@ -73,14 +73,13 @@
                     'rating': item.css('span.a-icon-alt::text').get(),<br>
                     'reviews': item.css('span.a-size-base::text').get(),<br>
                 }<br>
-
-        # Run the spider on terminal<br>
-        scrapy crawl quotes<br>
-
-        # Run the code to store the data in json file<br>
-        scrapy crawl quotes -o output.json<br>
-        """<br>
-
+    
+    #Run the spider on terminal<br>
+    scrapy crawl quotes<br>
+    #Run the code to store the data in json file<br>
+    scrapy crawl quotes -o output.json<br>
+    """<br>
+    
     # 3. Load a dataset and explore its structure<br>
     print("First few rows of the dataset:")<br>
     print(df.head())<br>
@@ -88,52 +87,155 @@
     print(df.info())<br>
     print("\nStatistical Summary:")<br>
     print(df.describe())<br>
-
+    
     # 4. Linear mappings and matrix operations in Python<br>
     matrix_a = np.array([[1, 2], [3, 4]])<br>
     matrix_b = np.array([[5, 6], [7, 8]])<br>
     result = np.dot(matrix_a, matrix_b)<br>
     print("\nMatrix Multiplication Result:")<br>
     print(result)<br>
-
+    
     # 5. Preprocessing techniques to manipulate and rescale data<br>
     scaler = StandardScaler()<br>
     df_scaled = df.copy()<br>
     df_scaled[iris.feature_names] = scaler.fit_transform(df_scaled[iris.feature_names])<br>
     print("\nScaled Data Sample:")<br>
     print(df_scaled.head())<br>
-
+    
     # 6. Create visualizations with Matplotlib and Seaborn<br>
     sns.boxplot(data=df, orient='h')<br>
     plt.title("Boxplot of Iris Features")<br>
-    plt.show() <br>
-
+    plt.show()<br>
+    
     # 7. Recognize and address Simpson’s Paradox in datasets (Hypothetical Explanation)<br>
-
+    """
+    Simpson's Paradox Example:<br>
+    Group A and Group B both show a higher success rate than Group C in a segmented analysis.<br>
+    However, when combined, Group C shows a higher overall success rate. This occurs due to<br>
+    unequal group sizes or distribution shifts.<br>
+    
+    Addressing it:<br>
+    - Aggregate data carefully and consider confounding factors.<br>
+    - Analyze data across multiple levels of segmentation.<br>
+    """<br>
+    
     data = {<br>
         'Group': ['A', 'A', 'B', 'B'],<br>
         'Category': ['X', 'Y', 'X', 'Y'],<br>
         'Attempts': [50, 50, 100, 100],<br>
         'Successes': [40, 10, 80, 50],<br>
     }<br>
-
+    
     df = pd.DataFrame(data)<br>
     df['Success Rate'] = df['Successes'] / df['Attempts']<br>
     print(df)<br>
-
-    overall_success_rate = df['Successes'].sum() / df['Attempts'].sum() <br>
+    overall_success_rate = df['Successes'].sum() / df['Attempts'].sum()<br>
     print(f"Overall Success Rate: {overall_success_rate:.2f}")<br>
-
-    group_success_rate = df.groupby('Group').apply(lambda g: g['Successes'].sum() / g['Attempts'].sum())<br>
+    
+    group_success_rate = df.groupby('Group').apply(<br>
+        lambda g: g['Successes'].sum() / g['Attempts'].sum()<br>
+    )<br>
     print("Group Success Rates:")<br>
     print(group_success_rate)<br>
-
+    
     plt.figure(figsize=(10, 6))<br>
     sns.barplot(data=df, x='Group', y='Success Rate', hue='Category', palette='viridis')<br>
     plt.title("Group and Category Success Rates")<br>
     plt.ylabel("Success Rate")<br>
-    plt.show() <br>
-
+    plt.show()<br>
+    
+    plt.figure(figsize=(10, 6))<br>
+    sns.barplot(x=group_success_rate.index, y=group_success_rate.values, palette='coolwarm')<br>
+    
+    plt.title("Overall Success Rate by Group")<br>
+    plt.ylabel("Success Rate")<br>
+    plt.show()<br>
+    
+    weighted_success_rate = df.groupby('Group').apply(<br>
+        lambda g: np.average(g['Success Rate'], weights=g['Attempts'])<br>
+    )<br>
+    print("Weighted Success Rates:")<br>
+    print(weighted_success_rate)<br>
+    plt.figure(figsize=(10, 6))<br>
+    sns.barplot(x=weighted_success_rate.index, y=weighted_success_rate.values, palette='crest')<br>
+    plt.title("Weighted Success Rates by Group")<br>
+    plt.ylabel("Weighted Success Rate")<br>
+    plt.show()<br>
+    
+    # 8. Implement and understand the k-NN algorithm<br>
+    # Load the Iris dataset<br>
+    iris = load_iris(as_frame=True)<br>
+    df = iris.frame<br>
+    
+    # Rename columns to match iris.feature_names<br>
+    df.columns = iris.feature_names + ['target']<br>
+    
+    # Check for missing or invalid values in the feature columns<br>
+    print("\nInspecting data for non-numeric values:")<br>
+    print(df[iris.feature_names].applymap(type).apply(lambda col: col.unique()))<br>
+    
+    # Drop rows with invalid data (e.g., non-numeric entries)<br>
+    df = df.dropna()  # Remove rows with NaN<br>
+    df = df[df[iris.feature_names].applymap(lambda x: isinstance(x, (int, float))).all(axis=1)]<br>
+    
+    # Confirm data types<br>
+    print("\nData types after cleaning:")<br>
+    print(df.dtypes)<br>
+    
+    # Assign feature variables (X) and target variable (y)<br>
+    X = df[iris.feature_names]<br>
+    y = df['target']<br>
+    
+    # Standardize features for k-NN<br>
+    scaler = StandardScaler()<br>
+    X_scaled = scaler.fit_transform(X)<br>
+    
+    # Split the dataset into training and testing sets<br>
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)<br>
+    
+    # Initialize the k-NN classifier with k=3<br>
+    knn = KNeighborsClassifier(n_neighbors=3)<br>
+    
+    # Train the classifier<br>
+    knn.fit(X_train, y_train)<br>
+    
+    # Make predictions on the test set<br>
+    y_pred_knn = knn.predict(X_test)<br>
+    
+    # Evaluate the model<br>
+    accuracy = accuracy_score(y_test, y_pred_knn)<br>
+    print("\nk-NN Accuracy:", accuracy)<br>
+    
+    # 9. Visualize correlations with Seaborn’s heatmap and pairplot<br>
+    sns.heatmap(df.corr(), annot=True, cmap='coolwarm')<br>
+    plt.title("Heatmap of Feature Correlations")<br>
+    plt.show()<br>
+    
+    sns.pairplot(df, hue='target')<br>
+    plt.suptitle("Pairplot of Iris Dataset (Repeated)", y=1.02)  # Title for Pairplot<br>
+    plt.show()<br>
+    
+    # 10. Using Pandas library: Load and manipulate data using DataFrames<br>
+    # Example: Add a calculated column<br>
+    df['sepal_area'] = df['sepal length (cm)'] * df['sepal width (cm)']<br>
+    print("\nSample with Added Column:")<br>
+    print(df.head())<br>
+    
+    # 11. Implement a simple spam filter using machine learning techniques (Naive Bayes Example)<br>
+    nb = GaussianNB()<br>
+    nb.fit(X_train, y_train)<br>
+    y_pred_nb = nb.predict(X_test)<br>
+    print("\nNaive Bayes Accuracy (Spam Filter Example):", accuracy_score(y_test, y_pred_nb))<br>
+    
+    # 12. Use df.isna() and fillna() to clean missing values<br>
+    print("\nMissing Values Before Cleaning:")<br>
+    print(df.isna().sum())<br>
+    
+    # Example: Fill missing values (if any)<br>
+    df.fillna(df.mean(), inplace=True)<br>
+    print("Missing Values After Cleaning:")<br>
+    print(df.isna().sum())<br>
+    
     <br>
 
 <h3 style="display: flex;justify-content: center;">IDA</h3>
@@ -158,9 +260,9 @@ df = iris.frame<br>
 # Explore the dataset<br>
 print("First few rows of the dataset:")<br>
 print(df.head())<br>
-print("<br>Dataset Info:")<br>
+print("Dataset Info:")<br>
 print(df.info())<br>
-print("<br>Statistical Summary:")<br>
+print("Statistical Summary:")<br>
 print(df.describe())<br>
 
 # Step 2: Encode and transform the data<br>
@@ -181,7 +283,7 @@ lr_model = LinearRegression()<br>
 lr_model.fit(X_train, y_train)<br>
 y_pred = lr_model.predict(X_test)<br>
 
-print("<br>Linear Regression R² Score:", r2_score(y_test, y_pred))<br>
+print("Linear Regression R² Score:", r2_score(y_test, y_pred))<br>
 print("Linear Regression MSE:", mean_squared_error(y_test, y_pred))<br>
 
 # Step 4: Visualizations<br>
@@ -200,7 +302,7 @@ knn = KNeighborsClassifier(n_neighbors=3)<br>
 knn.fit(X_train, y_train)<br>
 y_pred_knn = knn.predict(X_test)<br>
 
-print("<br>k-NN Accuracy:", accuracy_score(y_test, y_pred_knn))<br>
+print("k-NN Accuracy:", accuracy_score(y_test, y_pred_knn))<br>
 
 # Step 7: Correlation heatmap and pairplot<br>
 sns.heatmap(df.corr(), annot=True, cmap='coolwarm')<br>
@@ -224,7 +326,7 @@ sns.scatterplot(x=df['sepal length (cm)'], y=df['sepal width (cm)'], hue=df['clu
 plt.show()<br>
 
 # Step 10: Handle missing values<br>
-print("<br>Missing Values Before Cleaning:")<br>
+print("Missing Values Before Cleaning:")<br>
 print(df.isna().sum())<br>
 
 df.fillna(df.mean(), inplace=True)<br>
@@ -236,7 +338,7 @@ species_0 = df[df['target'] == 0]['sepal length (cm)']<br>
 species_1 = df[df['target'] == 1]['sepal length (cm)']<br>
 
 stat, p_val = ttest_ind(species_0, species_1)<br>
-print("<br>t-test p-value between species 0 and 1:", p_val)<br>
+print("t-test p-value between species 0 and 1:", p_val)<br>
 
 # Step 12: Train and test Naive Bayes classifier<br>
 nb = GaussianNB()<br>
